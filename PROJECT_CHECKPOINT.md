@@ -144,3 +144,299 @@ Day 1 work should be committed and pushed with:
 git add .
 git commit -m "Day 1: Complete User CRUD with validation and exception handling"
 git push origin main
+
+-------------------------------------------------------
+## Day 2 — Architecture Understanding
+
+### Request Flow: Create User
+
+When a client sends:
+
+POST /api/users
+
+the request follows this flow:
+
+Client
+↓
+UserController
+↓
+UserRequest DTO
+↓
+UserService
+↓
+Business Logic / Validation
+↓
+User Entity
+↓
+UserRepository
+↓
+JPA / Hibernate
+↓
+MySQL Database
+↓
+UserRepository
+↓
+UserService
+↓
+UserResponse DTO
+↓
+UserController
+↓
+JSON Response
+↓
+Client
+
+### Important Concepts
+
+- UserRequest is used for incoming API data.
+- UserResponse is used for outgoing API data.
+- DTOs do not perform business logic or database operations.
+- UserService contains business logic.
+- UserRepository handles database access.
+- User Entity represents the database record.
+- GlobalExceptionHandler handles exceptions when an error occurs.
+
+### Exception Flow
+
+If a business rule fails, for example a duplicate email:
+
+UserService
+↓
+DuplicateEmailException
+↓
+GlobalExceptionHandler
+↓
+ErrorResponse
+↓
+Client
+
+The exception handler is an error path, not part of the normal successful request flow.
+
+### Interview Explanation
+
+Controller receives the request → 
+DTO carries the API data → 
+Service applies business logic → 
+Repository accesses the database → 
+Entity represents the database record → 
+Service prepares the response DTO → 
+Controller returns the response.
+
+=============================================
+# Day 2 Checkpoint
+
+## Architecture Understanding
+
+### User Creation Request Flow
+
+Client
+↓
+UserController
+↓
+UserRequest DTO
+↓
+UserService
+↓
+Business Logic / Validation
+↓
+User Entity
+↓
+UserRepository
+↓
+JPA / Hibernate
+↓
+MySQL Database
+↓
+UserRepository
+↓
+UserService
+↓
+UserResponse DTO
+↓
+UserController
+↓
+ApiResponse
+↓
+HTTP Response
+↓
+Client
+
+### Important Concepts
+
+- Controller handles HTTP requests and responses.
+- UserRequest carries incoming API data.
+- UserResponse carries outgoing user data.
+- Service contains business logic.
+- Repository handles database access.
+- Entity represents the database record.
+- GlobalExceptionHandler handles exceptions.
+- DTOs are used to separate API data from database entities.
+
+---
+
+## API Response Standardization
+
+Created:
+
+`common/ApiResponse.java`
+
+The generic `ApiResponse<T>` provides a common structure for successful API responses.
+
+Structure:
+
+- success
+- message
+- data
+- timestamp
+
+### Generic Type
+
+`ApiResponse<T>` allows the same response wrapper to contain different types of data.
+
+Examples:
+
+`ApiResponse<UserResponse>`
+
+`ApiResponse<List<UserResponse>>`
+
+---
+
+## Updated APIs
+
+### POST /api/users
+
+Success response:
+
+`201 Created`
+
+Uses:
+
+`ApiResponse<UserResponse>`
+
+Message:
+
+`User created successfully`
+
+---
+
+### GET /api/users
+
+Success response:
+
+`200 OK`
+
+Uses:
+
+`ApiResponse<List<UserResponse>>`
+
+Message:
+
+`Users fetched successfully`
+
+---
+
+### GET /api/users/{id}
+
+Success response:
+
+`200 OK`
+
+Uses:
+
+`ApiResponse<UserResponse>`
+
+Message:
+
+`User fetched successfully`
+
+If user does not exist:
+
+`404 Not Found`
+
+Handled by:
+
+`UserNotFoundException`
+
+and
+
+`GlobalExceptionHandler`
+
+---
+
+### PUT /api/users/{id}
+
+Success response:
+
+`200 OK`
+
+Uses:
+
+`ApiResponse<UserResponse>`
+
+Message:
+
+`User updated successfully`
+
+The controller wraps the service result inside `ApiResponse`.
+
+---
+
+### DELETE /api/users/{id}
+
+Success response:
+
+`204 No Content`
+
+No response body is returned.
+
+Flow:
+
+Client
+↓
+UserController
+↓
+UserService
+↓
+UserRepository
+↓
+MySQL
+↓
+204 No Content
+
+If the user does not exist:
+
+`404 Not Found`
+
+Handled by:
+
+`UserNotFoundException`
+
+and
+
+`GlobalExceptionHandler`
+
+---
+
+## Key Learning
+
+Successful APIs that return data use the standard `ApiResponse<T>` wrapper.
+
+DELETE uses `204 No Content` because the operation succeeds without returning a response body.
+
+`ResponseEntity` is used by the controller to control the HTTP status and response body.
+
+---
+
+## Day 2 Testing
+
+Tested successfully using Postman:
+
+- POST user → `201 Created`
+- GET all users → `200 OK`
+- GET existing user → `200 OK`
+- GET non-existing user → `404 Not Found`
+- PUT user → `200 OK`
+- DELETE existing user → `204 No Content`
+- DELETE/GET non-existing user → `404 Not Found`
+
+All tested scenarios are working correctly.
