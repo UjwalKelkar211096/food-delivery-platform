@@ -440,3 +440,179 @@ Tested successfully using Postman:
 - DELETE/GET non-existing user → `404 Not Found`
 
 All tested scenarios are working correctly.
+===================================================
+# Savora - Project Checkpoints
+
+## Project Overview
+
+**Project Name:** Savora  
+**Tagline:** Taste it your way.
+
+Savora is an AI-powered, real-time food-delivery platform designed
+to provide a personalized food-ordering and delivery experience.
+
+The project is being developed with a production-oriented architecture
+and modern technologies suitable for a 3+ years experienced developer.
+
+---
+
+# Day 1 - User Module
+
+## Completed
+
+- Spring Boot project setup
+- Maven configuration
+- MySQL database connectivity
+- User Entity
+- UserRequest DTO
+- UserResponse DTO
+- UserRepository
+- UserService
+- UserController
+- Create User API
+- Get All Users API
+- Get User By ID API
+- Update User API
+- Delete User API
+- Request validation
+- Duplicate email validation
+- Duplicate email protection during update
+- Custom exceptions
+- Global exception handling
+- Postman API testing
+
+## Git Checkpoint
+
+**Commit:** `Day 1: Complete User CRUD and exception handling`
+
+---
+
+# Day 2 - Project Foundation / Continuation
+
+## Completed
+
+- Continued backend development
+- Maven-based project structure maintained
+- Layered architecture established
+- Controller → Service → Repository → Database flow understood
+- DTO-based API design established
+- Exception handling pattern established
+- Git checkpoint process established
+
+---
+
+# Day 3 - Restaurant Module
+
+## Completed
+
+### Restaurant Domain
+
+- Restaurant Entity
+- RestaurantType Enum
+- RestaurantRequest DTO
+- RestaurantResponse DTO
+- RestaurantRepository
+- RestaurantService
+- RestaurantController
+
+### Restaurant APIs
+
+- Create Restaurant
+- Get All Restaurants
+- Get Restaurant By ID
+- Update Restaurant
+
+### Validation
+
+- Restaurant name validation
+- Address validation
+- Email validation
+- Phone number validation
+- Restaurant type validation
+- Opening and closing time support
+
+### Business Rules
+
+- Duplicate restaurant email protection
+- Duplicate restaurant phone protection
+- Duplicate email protection during update
+- Duplicate phone protection during update
+- Restaurant not found handling
+
+### Exception Handling
+
+- DuplicateEmailException
+- DuplicatePhoneException
+- RestaurantNotFoundException
+- Global exception handling
+- Appropriate HTTP status codes:
+    - `201 Created`
+    - `200 OK`
+    - `400 Bad Request`
+    - `404 Not Found`
+    - `409 Conflict`
+
+### Testing
+
+Restaurant APIs tested successfully using Postman.
+
+Multiple restaurant records were created for testing:
+
+1. Spice Villa Premium
+2. Green Leaf Kitchen
+3. The Food Junction
+
+Duplicate email and duplicate phone update scenarios were also tested successfully.
+
+### Design Decision
+
+Restaurant deletion will use a **soft-delete / availability approach**
+rather than physically removing restaurant records.
+
+The restaurant will maintain a status such as:
+
+- `OPEN`
+- `CLOSED`
+
+This allows Savora to prevent new orders while preserving
+historical restaurant and order data.
+
+**Status implementation:** Planned for a future refinement.
+
+---
+
+## Git Checkpoint
+
+**Commit:** `Day 2: Complete Restaurant module`
+
+**Local Commit:** `e9176ae`
+
+**GitHub Push:** Pending
+
+> Note: The commit message was created as "Day 2" before the
+> project-day numbering was corrected. The actual project checkpoint
+> for the Restaurant module is **Day 3**.
+
+---
+
+# Next Step
+
+## Day 4 - Restaurant Module Refinement / Menu Module
+
+Planned direction:
+
+Restaurant
+↓
+Menu
+↓
+Menu Items
+↓
+Cart
+↓
+Order
+↓
+Payment
+↓
+Delivery
+↓
+AI Agents
